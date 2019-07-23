@@ -14,6 +14,16 @@ class CarrosSpider(scrapy.Spider):
         for item in items:
             url = item.xpath('./a/@href').extract_first()
             yield scrapy.Request(url=url, callback=self.parse_detail)
+
+        next_page = response.xpath(
+            '//div[contains(@class, "module_pagination")]//a[@rel = "next"]/@href'
+        )
+        if next_page:
+            #self.log('Próxima Página: {}'.format(next_page.extract_first()))
+            self.log('================== Próxima Página: %s ==============' % next_page.extract_first())
+            yield scrapy.Request(
+                url =  next_page.extract_first(), callback=self.parse
+            )
         
         
             
